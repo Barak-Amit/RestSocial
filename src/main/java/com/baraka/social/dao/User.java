@@ -2,9 +2,17 @@ package com.baraka.social.dao;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 public class User {
+
 	private Integer id;
+
+	@Size(min=2, message="Name of User should have atleast 2 characters")
 	private String name;
+	
+	@Past(message="Birthdate can't be in future")
 	private LocalDate birthdate;
 
 	public User(Integer id, String name, LocalDate birthdate) {
