@@ -2,9 +2,12 @@ package com.baraka.social.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.Valid;
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +25,12 @@ import com.baraka.social.dataservice.UserDataService;
 public class UserController {
 
 	private UserDataService dataService;
+	private MessageSource messageSource;
 
-	public UserController(UserDataService dataService) {
+	public UserController(UserDataService dataService, MessageSource messageSource) {
 		super();
 		this.dataService = dataService;
+		this.messageSource=messageSource;
 	}
 
 	@GetMapping("/users")
@@ -38,12 +43,12 @@ public class UserController {
 		User user = dataService.getUser(id);
 
 		if(user==null) {
-			throw new UserNotFoundException("User with Id is not available."); 
+			Locale locale = LocaleContextHolder.getLocale();
+			throw new UserNotFoundException(messageSource.getMessage("user.id", null,"No message Found", locale )); 
 		}
 
 		return user;
 	}
-
 
 	@PostMapping("/users")
 	public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
